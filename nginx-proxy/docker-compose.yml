@@ -1,0 +1,32 @@
+version: "3"
+services:
+  nginx-proxy:
+    #image: jwilder/nginx-proxy:alpine
+    build: "./nginx"
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ~/www/:/var/www/
+
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./data:/var/lib/mysql
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+    container_name: global_mysql_db
+
+volumes:
+  data:
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
+

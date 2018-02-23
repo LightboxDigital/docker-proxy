@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+
+  web:
+    build: ./docker/nginx/
+    volumes:
+        - ./docker/nginx/default.template:/tmp/default.template
+        - .:/var/www/my.site.one/
+        - ~/Git/my.site.one:/var/www/my.site.one/wp-content/themes/my.site.one/
+    environment:
+      - VIRTUAL_HOST=my.site.one
+      - VIRTUAL_ROOT=/var/www/my.site.one/
+      - FASTCGI_CONTAINER=mysiteone-php 
+    container_name: mysiteone-web
+    restart: always
+    depends_on:
+      - php
+    command: /bin/bash -c "envsubst \"`for v in $$(compgen -v);do printf '$${%s} ' $$v;done`'\" < /tmp/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+
+  php:
+    build: ./docker/php/
+    volumes:
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - .:/var/www/my.site.one
+      - ~/Git/my.site.one:/var/www/my.site.one/wp-content/themes/my.site.one/
+    container_name: mysiteone-php
+  
+networks:
+  default:
+    external:
+      name: nginx-proxy
