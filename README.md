@@ -1,28 +1,32 @@
-Configure host files:
+![Docker Logo](https://msdnshared.blob.core.windows.net/media/2017/10/docker.png "Docker Logo")
 
-##
-# Host Database
-#
-# localhost is used to configure the loopback interface
-# when the system is booting.  Do not change this entry.
-##
-127.0.0.1	localhost
-255.255.255.255	broadcasthost
-::1          localhost
 
-0.0.0.0 my.site.one
-0.0.0.0 my.site.two
+Docker Proxy
+============
 
-Create a new network
+Allowing for multiple projects to run side by side on your local machine.  
 
+Credits to [jwilder proxy](https://github.com/jwilder/nginx-proxy)
+
+## Instructions for setup
+
+Configure host files, add domains to your hosts files (/etc/hosts) like below, you can add as many as required:
+
+- 0.0.0.0 my.site.one
+- 0.0.0.0 my.site.two
+
+Docker proxy is network specific, meaning you can have as many network proxys as you require, all operating independently from each other. To create a new network use the following command:
+
+<pre>
 $ docker network create nginx-proxy
+</pre>
 
 Set up environment:
 
-1. Copy nginx-proxy directory to your www root for all sites (~/Sites - perhaps?)
-2. Modify line 11 of docker-compose.yml to match your directory structure (- ~/sites/:/var/www/ possibly?)
-3. Copy the docker-compose.yml and docker directory from either site-1 or site-2 directory.
-4. Modify the following lines in the docker-compose.yml file to match you environment:
+- Copy nginx-proxy directory to your **www root** for all your sites (~/Sites perhaps?).
+- Modify line 11 of docker-compose.yml to match your directory structure (- ~/sites/:/var/www/ possibly)?
+- Copy the docker-compose.yml and docker directory from either site-1 or site-2 directory.
+- Modify the following lines in the docker-compose.yml file to match you environment:
 	- 9
 	- 11 
 	- 12 
@@ -31,10 +35,12 @@ Set up environment:
 	- 24 
 	- 25 
 
-Note: Lines 13 & 25 must match, this will map the fastcgi param to the correct php container.
+Note: Lines 13 & 25 _must match_, this will map the fastcgi param to the correct php container, this is very important.
 
-Notice the command parameter will replace the variables accordingly when the container spins up, mapping your services correctly and allowing the proxy to forward requests correctly.
+Notice the <code>command</code> parameter will replace the variables accordingly when the container spins up, mapping your services correctly and allowing the proxy to forward requests correctly.
 
-You can modify the PHP version as you see fit by adjusting ./docker/php/Dockerfile.  You can also install additional items to the Nginx container by modifying ./docker/nginx/Dockerfile.
+You can modify the PHP version as you see fit by adjusting _./docker/php/Dockerfile_.  You can also install additional items to the Nginx container by modifying _./docker/nginx/Dockerfile_.
 
 Happy Dockering ;)
+
+
