@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  web:
+    build: ./docker/nginx/
+    volumes:
+        - ./docker/nginx/default.template:/tmp/default.template
+        - ./wordpress:/var/www/html/
+    environment:
+      - VIRTUAL_HOST=siteone.demosite.com
+      - VIRTUAL_ROOT=/var/www/html/
+      - FASTCGI_CONTAINER=siteone-wordpress
+    container_name: siteone-web
+    restart: always
+    command: /bin/bash -c "envsubst \"`for v in $$(compgen -v);do printf '$${%s} ' $$v;done`'\" < /tmp/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+
+  wordpress:
+    container_name: siteone-wordpress
+    image: wordpress:4.9.4-php7.1-fpm
+    volumes:
+        - ./wordpress:/var/www/html/
+    environment:
+      - WORDPRESS_DB_HOST=global_mysql_db
+      - WORDPRESS_DB_USER=root
+      - WORDPRESS_DB_PASSWORD=password
+      - WORDPRESS_DB_NAME=siteone
+    restart: always
+  
+networks:
+  default:
+    external:
+      name: nginx-proxy
