@@ -21,7 +21,6 @@ services:
   php:
     build: ./docker/php/
     volumes:
-      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini
       - .:/var/www/my.site.two
       - ~/Git/my.site.two:/var/www/my.site.two/wp-content/themes/my.site.two/
     container_name: mysitetwo-php
