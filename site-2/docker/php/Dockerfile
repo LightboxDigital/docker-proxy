@@ -7,11 +7,13 @@ RUN set -ex; \
 		libjpeg-dev \
 		libpng12-dev \
 		vim \
+		zlib1g-dev \
 	; \
 	rm -rf /var/lib/apt/lists/*; \
 	\
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install gd mysqli opcache; \
+	docker-php-ext-install zip; \
 	docker-php-ext-install pdo pdo_mysql;
 
 
