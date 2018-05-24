@@ -10,11 +10,15 @@ RUN set -ex; \
 		zlib1g-dev \
 	; \
 	rm -rf /var/lib/apt/lists/*; \
-	\
+	
+	apt-get install curl nano && \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
+
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install gd mysqli opcache; \
 	docker-php-ext-install zip; \
-	docker-php-ext-install pdo pdo_mysql;
+	docker-php-ext-install pdo pdo_mysql; \
+	docker-php-ext-install soap;
 
 
 COPY php.ini /usr/local/etc/php/conf.d/php.ini
