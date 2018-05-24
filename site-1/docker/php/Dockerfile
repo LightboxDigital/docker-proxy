@@ -1,24 +1,31 @@
-FROM php:7.1-fpm
+FROM php:7.1.9-fpm
 
+# Install any custom system requirements
 RUN set -ex; \
-	\
 	apt-get update; \
-	apt-get install -y \
+	apt-get install -y \ 
+		curl \ 
 		libjpeg-dev \
-		libpng12-dev \
+		libpng-dev \
 		vim \
-		zlib1g-dev \
-	; \
-	rm -rf /var/lib/apt/lists/*; \
-	
-	apt-get install curl nano && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
+		zlib1g-dev \ 
+		libxml2-dev \ 
+		php-soap \ 
+	&& apt-get clean -y \ 
+	&& rm -rf /var/lib/apt/lists/* ; \ 
 
-	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
-	docker-php-ext-install gd mysqli opcache; \
-	docker-php-ext-install zip; \
-	docker-php-ext-install pdo pdo_mysql; \
-	docker-php-ext-install soap;
+# Install various PHP extensions
+	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr && \ 
+	#docker-php-ext-configure soap --enable-soap && \ 
+    docker-php-ext-configure pdo_mysql --with-pdo-mysql; \
+	docker-php-ext-install \ 
+		gd \ 
+		mysqli \ 
+		opcache \ 
+		zip \ 
+		pdo \ 
+		pdo_mysql \ 
+		soap; 
 
+COPY php.ini /usr/local/etc/php/conf.d/
 
-COPY php.ini /usr/local/etc/php/conf.d/php.ini
