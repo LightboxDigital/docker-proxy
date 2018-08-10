@@ -9,6 +9,7 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ~/www/:/var/www/
+      - ./nginx/proxy-settings.conf:/etc/nginx/conf.d/custom_proxy_settings.conf
 
 
   db:
@@ -29,4 +30,3 @@ networks:
   default:
     external:
       name: nginx-proxy
-
