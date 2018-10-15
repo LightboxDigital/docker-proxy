@@ -29,12 +29,12 @@ Set up environment: (for Wordpress setup, **see below**!)
 - Copy the docker-compose.yml and docker directory from either site-1 or site-2 directory.
 - Modify the following lines in the docker-compose.yml file to match you environment:
     - 9
-    - 11 
-    - 12 
-    - 13 
+    - 11
+    - 12
+    - 13
     - 14
-    - 24 
-    - 25 
+    - 24
+    - 25
 
 Note: Lines 13 & 25 _must match_, this will map the fastcgi param to the correct php container, this is very important.
 
@@ -58,6 +58,7 @@ The lines that need changing in the **docker-compose.yml** file for for Wordpres
 
 By entering the database details on the above lines, a wp-config.php file will be automatically created using the details provided. You will then just need to run the Wordpress installation.
 
+### MSSQL Support:
+_site-mssql_ includes a different PHP Dockerfile which features MSSQL & MySQL driver support.
+
 Happy Dockering ;)
-
-
