@@ -12,33 +12,36 @@ RUN set -ex; \
 	&& apt-get install -y --no-install-recommends \
 		locales \
 		apt-transport-https \
-	&& echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
-	&& locale-gen \
-	&& apt-get update \
-	&& apt-get -y --no-install-recommends install \
-		msodbcsql \
-		unixodbc-dev \
 		curl \
 		libjpeg-dev \
 		libpng-dev \
 		vim \
 		zlib1g-dev \
 		libxml2-dev \
-	&& apt-get clean -y \
+		php-soap \
+	&& echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
+	&& locale-gen \
+	&& apt-get update \
+	&& apt-get -y --no-install-recommends install \
+		msodbcsql \
+		unixodbc-dev \
+
 	&& rm -rf /var/lib/apt/lists/* ; \
 
 # Install various PHP extensions
-	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr && \
-	docker-php-ext-install mbstring pdo pdo_mysql; \
-	docker-php-ext-configure pdo_mysql --with-pdo-mysql; \
-	docker-php-ext-install \
+	docker-php-ext-install mbstring pdo pdo_mysql \
+	&& docker-php-ext-configure soap --enable-soap \
+    && pecl install sqlsrv pdo_sqlsrv xdebug \
+    && docker-php-ext-enable sqlsrv pdo_sqlsrv xdebug \
+	&& docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+	&& docker-php-ext-configure pdo_mysql --with-pdo-mysql \
+	&& docker-php-ext-install \
 		gd \
 		mysqli \
 		opcache \
 		zip \
 		pdo \
 		pdo_mysql \
-    && pecl install sqlsrv pdo_sqlsrv xdebug \
-    && docker-php-ext-enable sqlsrv pdo_sqlsrv xdebug;
+		soap;
 
 COPY php.ini /usr/local/etc/php/conf.d/
