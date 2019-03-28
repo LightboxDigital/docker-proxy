@@ -5,6 +5,7 @@ ENV ACCEPT_EULA=Y
 
 # Install any custom system requirements
 RUN set -ex; \
+    sed -i '/jessie-updates/d' /etc/apt/sources.list && \ 
 	apt-get update \
 	&& curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
 	&& curl https://packages.microsoft.com/config/debian/8/prod.list \
