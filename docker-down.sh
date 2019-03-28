@@ -12,7 +12,7 @@
 
 # Working for finding dirs
 #find ~/ -name .Trash -prune -o \( -name docker-compose.yml \) -exec dirname {} \;
-dirs=$(find ~/ -name .Trash -prune -o \( -name docker-compose.yml -exec dirname {} \; \) )
+dirs=$(find ~/Sites -name .Trash -prune -o \( -name docker-compose.yml -exec dirname {} \; \) )
 
 for d in $dirs
 do
